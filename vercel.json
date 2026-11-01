@@ -6,6 +6,9 @@
   "functions": {
     "api/stats.js": {
       "maxDuration": 30
+    },
+    "api/visits.js": {
+      "maxDuration": 15
     }
   }
 }
