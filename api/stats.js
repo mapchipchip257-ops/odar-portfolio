@@ -11,9 +11,9 @@ export async function stats() {
   const response = await json('https://games.roblox.com/v1/games?universeIds=' + games.map(g=>g.universeId).join(','));
   const rows = games.map(g=>{
     const live = response.data.find(r=>r.id===g.universeId);
-    return {...g,playing:live?.playing ?? null,visits:live?.visits ?? null};
+    return {...g,playing:live?.playing ?? null,visits:live?.visits ?? null,favorites:live?.favoritedCount ?? null};
   });
-  function sum(list){const complete=list.every(g=>g.playing!==null&&g.visits!==null);return {playing:complete?list.reduce((n,g)=>n+g.playing,0):null,visits:complete?list.reduce((n,g)=>n+g.visits,0):null,count:list.length,complete};}
+  function sum(list){const complete=list.every(g=>g.playing!==null&&g.visits!==null);return {playing:complete?list.reduce((n,g)=>n+g.playing,0):null,visits:complete?list.reduce((n,g)=>n+g.visits,0):null,favorites:list.every(g=>Number.isFinite(g.favorites))?list.reduce((n,g)=>n+g.favorites,0):null,count:list.length,complete};}
   const totals=sum(rows),additional=sum(rows.filter(g=>g.additional));
   snapshot={fetchedAt:Date.now(),games:rows,complete:totals.complete,totals,additional};
   return snapshot;
